@@ -15,6 +15,7 @@ const schema = new mongoose.Schema({
     verified: {
         type: String,
         enum: ["Verified", "Pending","Rejected"],  
+        default:"Pending"
     }
 })
 
