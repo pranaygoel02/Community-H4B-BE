@@ -5,13 +5,12 @@ const CommunityMember = require('../../models/communityMemberSchema');
 
 const createCommunity = async (req, res) => {
     console.log(req.body);
-    const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail } = req.body;
+    const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail, city, state, country } = req.body;
     const {email} = req.user
     const user = await User.findOne({ email });
     console.log(user);
-    res.status(201).json({message: 'Community created successfully!'});
     try {
-        const community = new Community({ name, category, description, location, locationName, leaderId: user._id, image, imageId, email: communityEmail });
+        const community = new Community({ name, category, description, location, locationName, leaderId: user._id, image, imageId, email: communityEmail, city, state, country });
         await community.save();
         await socialLinks.forEach(async (socialLink) => {
             const { name, link } = socialLink;
@@ -59,7 +58,7 @@ const updateCommunity = async (req, res) => {
     if (community.leaderId !== user._id) {
         return res.status(401).json({ message: "You are not authorized to update this community!" });
     }
-    const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail } = req.body;
+    const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail, city, state, country } = req.body;
 
     try {
 
@@ -88,6 +87,15 @@ const updateCommunity = async (req, res) => {
         if(communityEmail) {
             community.communityEmail = communityEmail;
         }
+        if(city) {
+            community.city = city;
+        }
+        if(state) {
+            community.state = state;
+        }
+        if(country) {
+            community.country = country;
+        }
 
         if(community.socialLinks?.length > 0) {
             await SocialLink.deleteMany({ _id: { $in: community.socialLinks } });
@@ -110,6 +118,13 @@ const updateCommunity = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+// const getUserCommunities = async (req, res) => {
+//     const {email} = req.user;
+//     try {
+//         const User = await User.findOne({ email }).populate("communities");
+//     }
+// }
 
 module.exports = {
     createCommunity,

@@ -7,6 +7,7 @@ const { validateAccessToken } = require("../../middleware/accessToken");
 
 router.get("/", getAllCommunities);
 router.get('/:communityId', getCommunityById);
+// router.get('/get-user-communities', validateAccessToken, )
 router.post('/create', validateAccessToken ,createCommunity);
 router.delete('/:communityId', validateAccessToken,(req, res) => {});
 router.put('/:communityId',  validateAccessToken, updateCommunity);

@@ -20,6 +20,9 @@ const communitySchema = new mongoose.Schema({
     }],
     image: String,
     imageId: String,
+    city: String,
+    state: String,
+    country: String,
     location: [String],
     locationName: String,
     leaderId: {
