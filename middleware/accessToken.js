@@ -16,7 +16,7 @@ const validateAccessToken = (req,res,next) => {
     const type = $token && $token.split(' ')[2];
     if (token == null) throw new Error("No token provided");
     const user = jwt.verify(token, type === 'REFRESH' ? process.env.REFRESH_TOKEN_SECRET : process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) res.status(403).json({message: "Invalid token"});
+        if (err) return res.status(403).json({message: "Invalid token"});
         return user;
     })
     req.user = user;

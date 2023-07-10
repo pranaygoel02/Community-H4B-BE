@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const SocialLink = require('./socialLinkSchema');
-const CommunityMember = require('./communityMemberSchema');
+const User = require('./userSchema');
 
 const communitySchema = new mongoose.Schema({
     name: {
@@ -11,7 +11,7 @@ const communitySchema = new mongoose.Schema({
     description: String,
     members: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: CommunityMember,
+        ref: User,
     }],
     category: [String],
     socialLinks: [{

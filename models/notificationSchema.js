@@ -7,6 +7,7 @@ const notificationSchema = new mongoose.Schema({
   notification: { type: mongoose.Schema.Types.ObjectId, ref: CommunityMember },
   to: { type: mongoose.Schema.Types.ObjectId, ref: UserModel   },
   message:{type:String},
+  showBtns: { type: Boolean, default: true },
 });
 
 

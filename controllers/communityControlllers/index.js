@@ -1,7 +1,7 @@
-const Community = require('../../models/communitySchema');
 const SocialLink = require('../../models/socialLinkSchema');
 const User = require('../../models/userSchema');
 const CommunityMember = require('../../models/communityMemberSchema');
+const Community = require('../../models/communitySchema');
 
 const createCommunity = async (req, res) => {
     console.log(req.body);
@@ -18,8 +18,8 @@ const createCommunity = async (req, res) => {
             await Community.updateOne({ _id: community._id }, { $push: { socialLinks: newSocialLink._id } });
         })
         const communityMember = await CommunityMember.create({ communityId: community._id, role: "Leader", verified: "Verified", memberId: user._id });
-        await User.updateOne({ email }, { $push: { communities: community._id } });
-        await Community.updateOne({ _id: community._id }, { $push: { members: communityMember._id } });
+        await User.updateOne({ email }, { $push: { communities: communityMember._id } });
+        await Community.updateOne({ _id: community._id }, { $push: { members: communityMember.memberId } });
         res.status(201).json({message: 'Community created successfully!',community});
     } catch (error) {
         console.log(error);
@@ -119,16 +119,23 @@ const updateCommunity = async (req, res) => {
     }
 }
 
-// const getUserCommunities = async (req, res) => {
-//     const {email} = req.user;
-//     try {
-//         const User = await User.findOne({ email }).populate("communities");
-//     }
-// }
+const getUserCommunities = async (req, res) => {
+    const {email} = req.user;
+    console.log(email);
+    try {
+        const user = await User.findOne({ email }).populate({ path: 'communities', populate: { path: 'communityId' }});
+        const userCommunities = user.communities.map(obj => obj.communityId)
+        console.log(user);
+        res.status(200).json({communities: userCommunities, userId: user._id});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
 module.exports = {
     createCommunity,
     getAllCommunities,
     getCommunityById,
-    updateCommunity
+    updateCommunity,
+    getUserCommunities
 }
