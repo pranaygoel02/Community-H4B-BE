@@ -55,7 +55,7 @@ const updateCommunity = async (req, res) => {
     const { communityId } = req.params;
     const user = await User.findOne({ email });
     const community = await Community.findById(communityId);
-    if (community.leaderId !== user._id) {
+    if (community.leaderId !== String(user._id)) {
         return res.status(401).json({ message: "You are not authorized to update this community!" });
     }
     const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail, city, state, country } = req.body;
@@ -113,6 +113,7 @@ const updateCommunity = async (req, res) => {
                 await Community.updateOne({ _id: communityId }, { $push: { socialLinks: newSocialLink._id } });
             });
         }
+        res.status(200).json({message: 'Community updated successfully!',community});
     }
     catch (error) {
         res.status(500).json({ error: error.message });
