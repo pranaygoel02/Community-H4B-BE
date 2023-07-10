@@ -59,7 +59,9 @@ const getAllCommunities = async (req, res) => {
 const getCommunityById = async (req, res) => {
     try {
         const { communityId } = req.params;
-        const community = await Community.findById(communityId).populate("members").populate("socialLinks");
+        const community = await Community.findById(communityId).populate({path: "members", populate: {
+            path: "socialLinks"
+        }}).populate({path: "socialLinks"});
         if (community) {
             res.status(200).json(community);
         } else {
