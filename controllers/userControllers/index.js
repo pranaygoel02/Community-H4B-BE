@@ -5,11 +5,15 @@ const CommunityMember = require("../../models/communityMemberSchema");
 
 const updateUser = async (req, res) => {
     const {email} = req.user;
-    const { socialLinks, communities, skills, phone, country, state, password, image, imageId, bio } = req.body;    
+    const { name, socialLinks, communities, skills, phone, country, state, password, image, imageId, bio } = req.body;    
     console.log(socialLinks, communities);
     const user = await User.findOne({ email });
     try {
+
         // update user
+        if(name) {
+            user.name = name;
+        }
         if(bio) {
             user.bio = bio;
         }
