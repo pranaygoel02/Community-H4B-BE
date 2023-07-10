@@ -3,6 +3,26 @@ const User = require('../../models/userSchema');
 const CommunityMember = require('../../models/communityMemberSchema');
 const Community = require('../../models/communitySchema');
 
+
+const deleteCommunity = async (req, res) => {
+    const {email} = req.user;
+    const { communityId } = req.params;
+    const user = await User.findOne({ email });
+    const community = await Community.findById(communityId);
+    if(community.leaderId !== String(user._id)) {
+        return res.status(401).json({message: "You are not authorized to delete this community!"});
+    }
+    try {
+        await Community.findByIdAndDelete(communityId)
+        await CommunityMember.deleteMany({ communityId });
+        await User.updateOne({ email }, { $pull: { communities: { communityId } } });
+        res.status(200).json({ message: "Community deleted successfully!" });
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const createCommunity = async (req, res) => {
     console.log(req.body);
     const { name, description, location, locationName, socialLinks, category, image, imageId, email: communityEmail, city, state, country } = req.body;
@@ -138,5 +158,6 @@ module.exports = {
     getAllCommunities,
     getCommunityById,
     updateCommunity,
-    getUserCommunities
+    getUserCommunities,
+    deleteCommunity
 }
