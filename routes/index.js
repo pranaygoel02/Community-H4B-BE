@@ -8,6 +8,7 @@ const UserRoute = require("./UserRoute/index");
 const CommunityRoute = require("./CommunityRoute/index");
 const AddMemberRoute = require("./AddMemberRoute/index");
 const NotificationRoute = require("./NotificationRoute/index");
+const CMDKRoute = require("./CMDK/index");
 
 router.get("/", (req, res) => {
     res.send("Welcome to Community Server!");
@@ -19,6 +20,7 @@ router.use("/user", UserRoute);
 router.use("/community", CommunityRoute);
 router.use("/add-member", AddMemberRoute);
 router.use("/notification", NotificationRoute);
+router.use("/cmdk", CMDKRoute);
 
 
 
